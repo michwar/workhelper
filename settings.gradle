@@ -1,0 +1,4 @@
+rootProject.name = "WorkerHelper"
+include ':app'
+include ':data'
+include ':domain'

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pan Pracuś</string>
+
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_filters">Filtruj</string>
+    <string name="action_add">Dodaj</string>
+    <string name="action_send">Wyślij</string>
+    <string name="action_send_all">Wyslij wszystko</string>
+    <string name="action_zip_and_send_all">Wyślij jako ZIP</string>
+    <string name="action_cancel">Anuluj</string>
+    <string name="action_delete">Usuń</string>
+    <string name="action_edit">Edytuj</string>
+    <string name="action_save">Zapisz</string>
+    <string name="action_unused_local_files">Nieużyte pliki</string>
+    <string name="action_take_photo">Zrób zdjęcie</string>
+    <string name="action_open_files_manager">Otwórz manager plików</string>
+    <string name="action_archive">Zrealizuj</string>
+
+    <string name="basic_info">Opis</string>
+    <string name="request_list">List plików</string>
+    <string name="in_progress">W realizacji</string>
+    <string name="realized">Zrealizowane</string>
+
+    <string name="search">Szukaj…</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="project_list_fragment_label">Projekty</string>
+    <string name="add_project_fragment_label">Dodaj projekt</string>
+    <string name="project_details_fragment_label">Szczegóły projektu</string>
+    <string name="request_list_fragment_label">Lista obiektów</string>
+    <string name="settings_fragment_label">Ustawienia</string>
+    <string name="add_request_fragment_label">Dodaj obiekt</string>
+    <string name="details_request_fragment_label">Szczegóły obiektu</string>
+    <string name="take_photo_fragment_label">Zrób zdjęcie</string>
+    <string name="local_app_files_fragment_label">Pliki aplikacji</string>
+
+    <string name="next">Następny</string>
+    <string name="previous">Poprzedni</string>
+
+    <string name="no_data">Brak danych</string>
+    <string name="no_data_found_info">Nie udało się znaleźć danych. Spróbuj ponownie.</string>
+
+    <string name="name">Nazwa</string>
+    <string name="request_desc">Dodatkowy opis</string>
+    <string name="phone_no">Numer telefonu</string>
+    <string name="create_date">Data utworzenia</string>
+    <string name="email">Email</string>
+
+    <string name="email_settings">Ustawienia email</string>
+    <string name="settings_general_info">Zdefiniuj dane, które będą automatycznie dołączane do maila w zależności utworzonego projektu</string>
+    <string name="settings_define_additional_mail_info">Dodawaj dodatkową wiadomość podczas tworzenia emaila</string>
+    <string name="settings_additional_mail_info">Dodatkowa wiadomość email</string>
+    <string name="settings_use_project_name_as_subject">Używaj nazwy projektu jako tutuł wiadomości email</string>
+    <string name="settings_add_project_desc_to_mail">Dodawaj opis projektu do wiadomości email tworzonej w ramach danego projektu</string>
+    <string name="settings_add_request_desc_to_mail">Dodawaj opis pliku do wiadomości email tworzonej w ramach wysyłania pojedynczego pliku</string>
+
+    <string name="delete_file_succeeded">Plik %1$s usunięty</string>
+    <string name="delete_file_failed">Plik %1$s nie został usunięty</string>
+
+</resources>

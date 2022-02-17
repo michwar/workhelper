@@ -1,0 +1,36 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.WorkerHelper" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/orange_700</item>
+        <item name="colorPrimaryVariant">@color/orange_500</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_700</item>
+        <item name="colorSecondaryVariant">@color/orange_500</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="android:colorBackground">@color/black</item>
+        <item name="cardViewStyle">@style/CustomCardView</item>
+        <item name="tabStyle">@style/CustomTabLayout</item>
+
+    </style>
+
+    <style name="Theme.WorkerHelper.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/grey_200</item>
+    </style>
+
+    <style name="CustomCardView" parent="CardView.Light">
+        <item name="cardBackgroundColor">@color/grey_800</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <style name="CustomTabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="Theme.WorkerHelper.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+</resources>

@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">WorkerHelper</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_filters">Filter</string>
+    <string name="action_add">Add</string>
+    <string name="action_send">Send</string>
+    <string name="action_send_all">Send all</string>
+    <string name="action_zip_and_send_all">Zip and send all</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_save">Save</string>
+    <string name="action_unused_local_files">Check unused files</string>
+    <string name="action_take_photo">Take photo</string>
+    <string name="action_open_files_manager">Open file manager</string>
+    <string name="action_archive">Archive</string>
+
+    <string name="basic_info">Basic info</string>
+    <string name="request_list">Request list</string>
+    <string name="in_progress">In progress</string>
+    <string name="realized">Realized</string>
+
+    <string name="search">Search</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="project_list_fragment_label">Projects</string>
+    <string name="add_project_fragment_label">Add project</string>
+    <string name="project_details_fragment_label">Project details</string>
+    <string name="request_list_fragment_label">Requests list</string>
+    <string name="settings_fragment_label">Settings</string>
+    <string name="add_request_fragment_label">Add request</string>
+    <string name="details_request_fragment_label">Details</string>
+    <string name="take_photo_fragment_label">Take photo</string>
+    <string name="local_app_files_fragment_label">Local files</string>
+
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="no_data">No data</string>
+    <string name="no_data_found_info">Could not find data. Please try again</string>
+
+    <string name="name">Name</string>
+    <string name="request_desc">Additional description</string>
+    <string name="phone_no">Phone number</string>
+    <string name="create_date">Create date</string>
+    <string name="email">Email</string>
+
+    <string name="email_settings">Email settings</string>
+    <string name="settings_general_info">You can define rules to automatically fill in some email information based on project or request data.</string>
+    <string name="settings_define_additional_mail_info">Define additional mail info added on the bottom of email message</string>
+    <string name="settings_additional_mail_info">Additional email information</string>
+    <string name="settings_use_project_name_as_subject">Use a project name as an email\'s subject</string>
+    <string name="settings_add_project_desc_to_mail">Add a project description to an email</string>
+    <string name="settings_add_request_desc_to_mail">Add a request description to an email</string>
+
+    <string name="delete_file_succeeded">File %1$s deleted</string>
+    <string name="delete_file_failed">File %1$s not deleted</string>
+
+</resources>
