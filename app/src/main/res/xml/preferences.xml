@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <Preference
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/settings_general_info" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="define_additional_mail_info"
+            android:title="@string/settings_define_additional_mail_info" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="additional_mail_info_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:title="@string/settings_additional_mail_info" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="use_project_name_as_email_subject"
+            android:title="@string/settings_use_project_name_as_subject" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="add_project_desc_to_email"
+            android:title="@string/settings_add_project_desc_to_mail" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="add_request_desc_to_email"
+            android:title="@string/settings_add_request_desc_to_mail" />
+
+</PreferenceScreen>
