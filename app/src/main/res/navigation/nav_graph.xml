@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/projectsPagerFragment">
+
+    <fragment
+        android:id="@+id/requestDetailsFragment"
+        android:name="michal.warcholinski.pl.workerhelper.requestdetails.RequestDetailsFragment"
+        android:label="@string/details_request_fragment_label">
+        <action
+            android:id="@+id/to_localAppFilesFragment"
+            app:destination="@id/localAppFilesFragment" />
+        <argument
+            android:name="imageTransitionName"
+            app:argType="string" />
+        <argument
+            android:name="requestId"
+            app:argType="long" />
+        <argument
+            android:name="projectId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="michal.warcholinski.pl.workerhelper.settings.SettingsFragment"
+        android:label="@string/settings_fragment_label" />
+
+    <fragment
+        android:id="@+id/takePhotoFragment"
+        android:name="michal.warcholinski.pl.workerhelper.addrequest.TakePhotoFragment"
+        android:label="@string/take_photo_fragment_label" >
+        <argument
+            android:name="projectName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/localAppFilesFragment"
+        android:name="michal.warcholinski.pl.workerhelper.addrequest.localappfiles.LocalAppFilesFragment"
+        android:label="@string/local_app_files_fragment_label" />
+
+    <fragment
+        android:id="@+id/RequestListFragment"
+        android:name="michal.warcholinski.pl.workerhelper.requestlist.RequestListFragment"
+        android:label="@string/request_list_fragment_label"
+        tools:layout="@layout/fragment_request_list"/>
+    <fragment
+        android:id="@+id/AddRequestFragment"
+        android:name="michal.warcholinski.pl.workerhelper.addrequest.AddRequestFragment"
+        android:label="@string/add_request_fragment_label"
+        tools:layout="@layout/fragment_add_request">
+        <action
+            android:id="@+id/to_takePhotoFragment"
+            app:destination="@id/takePhotoFragment" />
+        <action
+            android:id="@+id/to_localAppFilesFragment"
+            app:destination="@id/localAppFilesFragment" />
+        <argument
+            android:name="projectId"
+            app:argType="long" />
+        <argument
+            android:name="projectName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="michal.warcholinski.pl.workerhelper.projectlist.ProjectListFragment"
+        android:label="@string/project_list_fragment_label" />
+    <fragment
+        android:id="@+id/addProjectFragment"
+        android:name="michal.warcholinski.pl.workerhelper.addproject.AddProjectFragment"
+        android:label="@string/add_project_fragment_label" />
+    <fragment
+        android:id="@+id/projectDetailsFragment"
+        android:name="michal.warcholinski.pl.workerhelper.projectdetail.ProjectDetailsFragment"
+        android:label="@string/project_details_fragment_label">
+        <action
+            android:id="@+id/to_AddRequestFragment"
+            app:destination="@id/AddRequestFragment" />
+        <action
+            android:id="@+id/to_requestDetailsFragment"
+            app:destination="@id/requestDetailsFragment" />
+        <argument
+            android:name="projectId"
+            app:argType="long" />
+        <argument android:name="realized"
+            app:argType="boolean" />
+        <argument
+            android:name="projectName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/projectsPagerFragment"
+        android:name="michal.warcholinski.pl.workerhelper.projectlist.ProjectsPagerFragment"
+        android:label="@string/project_list_fragment_label">
+        <action
+            android:id="@+id/to_projectDetailsFragment"
+            app:destination="@id/projectDetailsFragment" />
+        <action
+            android:id="@+id/to_addProjectFragment"
+            app:destination="@id/addProjectFragment" />
+        <action
+            android:id="@+id/to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+</navigation>
