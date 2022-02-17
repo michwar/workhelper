@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="6dp"
+    android:paddingTop="24dp"
+    android:paddingEnd="6dp"
+    android:paddingBottom="24dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <michal.warcholinski.pl.workerhelper.view.ValueLabelActionView
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:autoLink="phone"
+            app:layout_constraintTop_toBottomOf="@id/email"
+            app:valueLabelActionViewIcon="@drawable/ic_phone"
+            app:valueLabelActionViewLabelText="@string/phone_no" />
+
+        <michal.warcholinski.pl.workerhelper.view.ValueLabelActionView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:autoLink="phone"
+            app:layout_constraintTop_toBottomOf="@id/create_date"
+            app:valueLabelActionViewIcon="@drawable/ic_email"
+            app:valueLabelActionViewLabelText="@string/email" />
+
+        <michal.warcholinski.pl.workerhelper.view.ValueLabelView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:valueLabelViewLabelText="@string/request_desc" />
+
+        <michal.warcholinski.pl.workerhelper.view.ValueLabelView
+            android:id="@+id/create_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/desc"
+            app:valueLabelViewLabelText="@string/create_date" />
+
+        <michal.warcholinski.pl.workerhelper.view.ValueLabelView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:valueLabelViewLabelText="@string/name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
