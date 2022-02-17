@@ -1,0 +1,15 @@
+ext {
+
+//    Android
+    androidBuildToolVersion = "26.0.0"
+    androidMinSdkVersion = 15
+    androidTargetSdkVersion = 31
+    androidCompileSdkVersion = 31
+
+    kotlinVersion = '1.5.21'
+    roomVersion = '2.4.0'
+    supportLibraryVersion = '26.0.1'
+    navigation_version = '2.3.5'
+    hiltVersion = '2.38.1'
+
+}
