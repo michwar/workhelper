@@ -1,10 +1,13 @@
 package michal.warcholinski.pl.workerhelper.addrequest
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -17,7 +20,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import michal.warcholinski.pl.workerhelper.databinding.FragmentTakePictureBinding
-import michal.warcholinski.pl.workerhelper.extension.showELog
+import michal.warcholinski.pl.workerhelper.extension.gone
+import michal.warcholinski.pl.workerhelper.extension.visible
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,6 +45,30 @@ class TakePhotoFragment : Fragment() {
 
 	private val viewModel: TakePhotoViewModel by viewModels()
 
+	private val requestPermissionLauncher =
+		registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+			if (isGranted) {
+				hideAdditionalCameraPermissionInfoView()
+				startCameraPreview()
+			} else {
+				showAdditionalCameraPermissionInfoView()
+			}
+		}
+
+	private fun hideAdditionalCameraPermissionInfoView() {
+		binding.permissionExtraInfo.gone()
+		binding.grantCameraPermissionButton.gone()
+		binding.cameraPreview.visible()
+		binding.takePhoto.isEnabled = true
+	}
+
+	private fun showAdditionalCameraPermissionInfoView() {
+		binding.permissionExtraInfo.visible()
+		binding.grantCameraPermissionButton.visible()
+		binding.cameraPreview.gone()
+		binding.takePhoto.isEnabled = false
+	}
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		_binding = FragmentTakePictureBinding.inflate(inflater, container, false)
 		return binding.root
@@ -52,9 +80,21 @@ class TakePhotoFragment : Fragment() {
 		outputDirectory = getOutputDirectory()
 		cameraExecutor = Executors.newSingleThreadExecutor()
 
-		startCameraPreview()
+		when (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)) {
+			PackageManager.PERMISSION_GRANTED -> {
+				startCameraPreview()
+			}
+			PackageManager.PERMISSION_DENIED -> {
+				requestCameraPermission()
+			}
+		}
 
 		binding.takePhoto.setOnClickListener { takePhoto() }
+		binding.grantCameraPermissionButton.setOnClickListener { requestCameraPermission() }
+	}
+
+	private fun requestCameraPermission() {
+		requestPermissionLauncher.launch(Manifest.permission.CAMERA)
 	}
 
 	private fun getOutputDirectory(): File {
@@ -62,6 +102,7 @@ class TakePhotoFragment : Fragment() {
 	}
 
 	private fun startCameraPreview() {
+		binding.takePhoto.isEnabled = true
 		val cameraPreviewFuture = ProcessCameraProvider.getInstance(requireContext())
 
 		cameraPreviewFuture.addListener({
@@ -111,6 +152,7 @@ class TakePhotoFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		cameraExecutor.shutdown()
+		requestPermissionLauncher.unregister()
 		_binding = null
 	}
 }

@@ -56,5 +56,8 @@
 
     <string name="delete_file_succeeded">File %1$s deleted</string>
     <string name="delete_file_failed">File %1$s not deleted</string>
+    <string name="require_camera_permission_info">The application requires camera permission.\n
+        If you do not allow it, you will not be able to take a photo directly from the application.</string>
+    <string name="grant_camera_permission">Grant permission</string>
 
 </resources>

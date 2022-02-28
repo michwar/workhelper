@@ -57,5 +57,9 @@
 
     <string name="delete_file_succeeded">Plik %1$s usunięty</string>
     <string name="delete_file_failed">Plik %1$s nie został usunięty</string>
+    <string name="require_camera_permission_info">Aplikacja wymaga nadania prawa do aparatu w celu wykonywania zdjęć.\n
+        Jeżeli nie wyrażasz na to zgody, nie będziesz miał możliwości robienia zdjęć bezpośrednio w aplikacji</string>
+    <string name="grant_camera_permission">Nadaj prawa</string>
+
 
 </resources>
