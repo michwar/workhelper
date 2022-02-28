@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.map
 import michal.warcholinski.pl.data.local.dao.ProjectDao
 import michal.warcholinski.pl.data.local.dao.RequestDao
 import michal.warcholinski.pl.data.local.entity.ProjectEntity
+import michal.warcholinski.pl.data.local.impl.EmailDataProvider
 import michal.warcholinski.pl.data.local.impl.LocalAppFilesProvider
 import michal.warcholinski.pl.data.local.impl.SettingsManager
 import michal.warcholinski.pl.data.local.mapper.ProjectMapper
@@ -25,8 +26,8 @@ internal class ProjectRepositoryImpl @Inject constructor(
 	private val projectDao: ProjectDao,
 	private val requestDao: RequestDao,
 	private val mapper: ProjectMapper,
-	private val settingsManager: SettingsManager,
-	private val localAppFilesProvider: LocalAppFilesProvider
+	private val localAppFilesProvider: LocalAppFilesProvider,
+	private val emailDataProvider: EmailDataProvider
 ) : ProjectRepository {
 
 	override suspend fun getAllProjects(realized: Boolean): Flow<List<ProjectDataModel>> {
@@ -57,34 +58,7 @@ internal class ProjectRepositoryImpl @Inject constructor(
 
 	override suspend fun getEmailData(projectId: Long): EmailDataModel {
 		val project = projectDao.getById(projectId)
-
-		val subject =
-			if (settingsManager.useProjectNameAsEmailSubject) project?.name
-			else null
-
-		var extraEmailText = ""
-		if (settingsManager.addProjectDescToEmail) {
-			val projectDesc = project?.desc
-			if (!projectDesc.isNullOrEmpty()) {
-				extraEmailText += projectDesc
-				extraEmailText += "\n"
-			}
-		}
-
-		if (settingsManager.defineAdditionalEmailInfo) {
-			val additionalEmailUserInfo = settingsManager.additionalEmailInfoValue
-			if (additionalEmailUserInfo.isNotEmpty()) {
-				extraEmailText += additionalEmailUserInfo
-			}
-		}
-		val projectName = project?.name
-		val zipFilePath = if (null != projectName) {
-			val zipFilesDir = localAppFilesProvider.getZipFilesDir()
-			File(zipFilesDir, "${projectName}.zip").path
-		} else
-			null
-
-		return EmailDataModel(project?.email, subject, extraEmailText, zipFilePath)
+		return emailDataProvider.getEmailDataForProject(project)
 	}
 
 	override suspend fun createZipFile(projectId: Long) {

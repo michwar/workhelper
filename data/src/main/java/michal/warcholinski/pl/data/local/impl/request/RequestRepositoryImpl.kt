@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import michal.warcholinski.pl.data.local.dao.ProjectDao
 import michal.warcholinski.pl.data.local.dao.RequestDao
 import michal.warcholinski.pl.data.local.entity.RequestEntity
+import michal.warcholinski.pl.data.local.impl.EmailDataProvider
 import michal.warcholinski.pl.data.local.impl.SettingsManager
 import michal.warcholinski.pl.data.local.mapper.RequestMapper
 import michal.warcholinski.pl.domain.requests.domain.RequestRepository
@@ -20,7 +21,7 @@ internal class RequestRepositoryImpl @Inject constructor(
 	private val projectDao: ProjectDao,
 	private val requestDao: RequestDao,
 	private val mapper: RequestMapper,
-	private val settingsManager: SettingsManager
+	private val emailDataProvider: EmailDataProvider
 ) : RequestRepository {
 
 	override fun getAllRequests(projectId: Long): Flow<List<RequestDataModel>> {
@@ -52,33 +53,6 @@ internal class RequestRepositoryImpl @Inject constructor(
 	override suspend fun getEmailData(projectId: Long, requestId: Long): EmailDataModel {
 		val project = projectDao.getById(projectId)
 		val request = requestDao.getById(requestId)
-
-		val subject = if (settingsManager.useProjectNameAsEmailSubject) project?.name else null
-
-		var extraEmailText = ""
-		if (settingsManager.addProjectDescToEmail) {
-			val projectDesc = project?.desc
-			if (!projectDesc.isNullOrEmpty()) {
-				extraEmailText += projectDesc
-				extraEmailText += "\n"
-			}
-		}
-
-		if (settingsManager.addRequestDescToEmail) {
-			val requestDesc = request?.desc
-			if (!requestDesc.isNullOrEmpty()) {
-				extraEmailText += requestDesc
-				extraEmailText += "\n"
-			}
-		}
-
-		if (settingsManager.defineAdditionalEmailInfo) {
-			val additionalEmailUserInfo = settingsManager.additionalEmailInfoValue
-			if (additionalEmailUserInfo.isNotEmpty()) {
-				extraEmailText += additionalEmailUserInfo
-			}
-		}
-
-		return EmailDataModel(project?.email, subject, extraEmailText, request?.photoPath)
+		return emailDataProvider.getEmailDataForRequest(project, request)
 	}
 }

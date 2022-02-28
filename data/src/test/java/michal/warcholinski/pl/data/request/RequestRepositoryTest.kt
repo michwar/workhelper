@@ -8,7 +8,6 @@ import michal.warcholinski.pl.data.local.dao.ProjectDao
 import michal.warcholinski.pl.data.local.dao.RequestDao
 import michal.warcholinski.pl.data.local.entity.RequestEntity
 import michal.warcholinski.pl.data.local.impl.EmailDataProvider
-import michal.warcholinski.pl.data.local.impl.SettingsManager
 import michal.warcholinski.pl.data.local.impl.request.RequestRepositoryImpl
 import michal.warcholinski.pl.data.local.mapper.RequestMapper
 import org.junit.Assert.assertEquals
@@ -22,10 +21,9 @@ class RequestRepositoryTest {
 	private val projectDao = mockk<ProjectDao>()
 	private val requestDao = mockk<RequestDao>()
 	private val requestMapper = spyk<RequestMapper>()
-	private val settingsManager = mockk<SettingsManager>()
 	private val emailDataProvider = mockk<EmailDataProvider>()
 	private val requestRepository =
-		RequestRepositoryImpl(projectDao, requestDao, requestMapper, settingsManager, emailDataProvider)
+		RequestRepositoryImpl(projectDao, requestDao, requestMapper, emailDataProvider)
 
 
 	@Test
