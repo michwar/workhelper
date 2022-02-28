@@ -15,7 +15,6 @@ import javax.inject.Inject
  */
 internal class LocalAppFilesRepositoryImpl @Inject constructor(
 	private val localAppFilesProvider: LocalAppFilesProvider,
-	private val provider: LocalAppFilesProvider,
 	private val requestDao: RequestDao
 
 ) : LocalAppFilesRepository {
@@ -26,7 +25,7 @@ internal class LocalAppFilesRepositoryImpl @Inject constructor(
 
 	override suspend fun getLocalAppFiles(): Flow<List<FileDataModel>> {
 		val requestsWithFile = requestDao.getAll().mapNotNull { request -> request.photoPath }
-		return provider
+		return localAppFilesProvider
 			.getAllLocalFiles()
 			.map { allFiles -> allFiles.filter { file -> !requestsWithFile.contains(file.path) } }
 			.map { unusedFiles -> unusedFiles.map { file -> FileDataModel(file.name, file.path, file.toUri()) } }

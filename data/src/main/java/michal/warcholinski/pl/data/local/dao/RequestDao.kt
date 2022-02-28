@@ -22,7 +22,7 @@ internal interface RequestDao {
 	@Query("SELECT * FROM request")
 	suspend fun getAll(): List<RequestEntity>
 
-	@Query("SELECT * FROM request WHERE project_id = :projectId")
+	@Query("SELECT * FROM request WHERE project_id = :projectId ORDER BY id ASC")
 	fun getAllForProject(projectId: Long): Flow<List<RequestEntity>>
 
 	@Update
