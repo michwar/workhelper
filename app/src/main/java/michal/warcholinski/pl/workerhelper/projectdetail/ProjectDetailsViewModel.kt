@@ -2,7 +2,6 @@ package michal.warcholinski.pl.workerhelper.projectdetail
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import michal.warcholinski.pl.domain.project.domain.ArchiveProjectUseCase
 import michal.warcholinski.pl.domain.project.domain.DeleteProjectUseCase
@@ -10,7 +9,6 @@ import michal.warcholinski.pl.domain.project.domain.GetProjectDetailsUseCase
 import michal.warcholinski.pl.domain.project.domain.PrepareAndGetDataToComposeProjectZipEmailUseCase
 import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.SendEmailDataViewState
-import michal.warcholinski.pl.workerhelper.extension.showELog
 import javax.inject.Inject
 
 /**
@@ -56,6 +54,7 @@ class ProjectDetailsViewModel @Inject constructor(
 		viewModelScope.launch {
 			val emailDataModel = getZipProjectDataToComposeEmailUseCase.execute(id)
 			_viewState.value = SendEmailDataViewState(emailDataModel)
+			_viewState.value = ViewState.NoData
 		}
 	}
 }
