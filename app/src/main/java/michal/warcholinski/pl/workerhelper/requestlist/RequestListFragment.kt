@@ -32,7 +32,7 @@ class RequestListFragment : Fragment() {
 	private val disposableBag = CompositeDisposable()
 	private val viewModel: RequestListViewModel by viewModels()
 
-	private val requestListAdapter = RequestListAdapter()
+	private val requestListAdapter = RequestListAdapter(projectName)
 
 	private val projectId
 		get() = arguments?.getLong(PROJECT_ID).orLongMin()

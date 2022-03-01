@@ -1,11 +1,15 @@
 package michal.warcholinski.pl.workerhelper.requestdetails
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,8 +23,10 @@ import michal.warcholinski.pl.domain.requests.model.RequestDataModel
 import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.R
 import michal.warcholinski.pl.workerhelper.SendEmailDataViewState
+import michal.warcholinski.pl.workerhelper.addrequest.AddRequestFragmentDirections
 import michal.warcholinski.pl.workerhelper.databinding.FragmentRequestDetailsBinding
 import michal.warcholinski.pl.workerhelper.extension.gone
+import michal.warcholinski.pl.workerhelper.extension.showELog
 import michal.warcholinski.pl.workerhelper.extension.visible
 import java.io.File
 
@@ -37,7 +43,7 @@ class RequestDetailsFragment : Fragment() {
 
 	private val viewModel: RequestDetailsViewModel by viewModels()
 
-	private var isInEditMode = false
+	private var imagePath: String? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -60,7 +66,11 @@ class RequestDetailsFragment : Fragment() {
 
 		viewModel.viewState.observe(viewLifecycleOwner, { viewState ->
 			when (viewState) {
-				is BaseViewModel.ViewState.Data -> showDetails(viewState.data as RequestDataModel)
+				is BaseViewModel.ViewState.Data -> {
+					val requestDataModel = viewState.data as RequestDataModel
+					imagePath = requestDataModel.photoPath
+					showDetails(requestDataModel)
+				}
 				BaseViewModel.ViewState.NoData -> showEmpty()
 				BaseViewModel.ViewState.Loading -> TODO()
 				is BaseViewModel.ViewState.Error -> TODO()
@@ -70,15 +80,36 @@ class RequestDetailsFragment : Fragment() {
 			}
 		})
 
-		viewModel.isInEditMode.observe(viewLifecycleOwner, { isInEditMode ->
-			this.isInEditMode = isInEditMode
-			if (isInEditMode) {
-				editModeView()
-			} else {
-				readOnlyView()
-			}
-			activity?.invalidateOptionsMenu()
-		})
+		findNavController()
+			.currentBackStackEntry
+			?.savedStateHandle
+			?.getLiveData<Uri>("file_uri")
+			?.observe(viewLifecycleOwner, { photoUri ->
+				imagePath = photoUri?.path
+				showRequestImage(photoPath = photoUri?.path)
+			})
+
+		binding.photoButton.setOnClickListener { findNavController().navigate(RequestDetailsFragmentDirections.toTakePhotoFragment(args.projectName)) }
+		binding.localPhotosButton.setOnClickListener {
+			findNavController().navigate(AddRequestFragmentDirections.toLocalAppFilesFragment())
+		}
+		binding.filesButton.setOnClickListener { openFileChooser() }
+	}
+
+	private fun openFileChooser() {
+		val intent = Intent(Intent.ACTION_GET_CONTENT)
+		intent.type = "*/*"
+		intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+		try {
+			startActivityForResult(
+				Intent.createChooser(intent, "Select a File to Upload"),
+				150)
+		} catch (ex: ActivityNotFoundException) {
+			// Potentially direct the user to the Market with a Dialog
+			Toast.makeText(requireContext(), "Please install a File Manager.",
+				Toast.LENGTH_SHORT).show()
+		}
 	}
 
 	private fun sendEmail(emailDataModel: EmailDataModel) {
@@ -102,21 +133,17 @@ class RequestDetailsFragment : Fragment() {
 			.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 	}
 
-	private fun editModeView() {
-		binding.nameEdit.isEnabled = true
-		binding.descEdit.isEnabled = true
-	}
-
-	private fun readOnlyView() {
-		binding.nameEdit.isEnabled = false
-		binding.descEdit.isEnabled = false
-	}
-
 	private fun showDetails(requestDataModel: RequestDataModel) {
 		binding.nameEdit.setText(requestDataModel.name)
 		binding.descEdit.setText(requestDataModel.desc)
 
-		if (null != requestDataModel.photoPath) {
+		showRequestImage(requestDataModel.photoPath)
+
+		binding.info.gone()
+	}
+
+	private fun showRequestImage(photoPath: String?) {
+		if (null != photoPath) {
 			binding.imagePreview.visible()
 			binding.photoButton.gone()
 			binding.localPhotosButton.gone()
@@ -124,7 +151,7 @@ class RequestDetailsFragment : Fragment() {
 
 			Glide
 				.with(this)
-				.load(requestDataModel.photoPath)
+				.load(photoPath)
 				.into(binding.imagePreview)
 		} else {
 			binding.imagePreview.gone()
@@ -132,8 +159,6 @@ class RequestDetailsFragment : Fragment() {
 			binding.localPhotosButton.visible()
 			binding.filesButton.visible()
 		}
-
-		binding.info.gone()
 	}
 
 	private fun showEmpty() {
@@ -147,12 +172,16 @@ class RequestDetailsFragment : Fragment() {
 			.show()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		if (isInEditMode) {
-			inflater.inflate(R.menu.menu_request_edit, menu)
-		} else {
-			inflater.inflate(R.menu.menu_request_details, menu)
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		if (requestCode == 150 && resultCode == Activity.RESULT_OK) {
+			showELog("${data?.data}")
+			imagePath = data?.data?.path
 		}
+		super.onActivityResult(requestCode, resultCode, data)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.menu_request_details, menu)
 		super.onCreateOptionsMenu(menu, inflater)
 	}
 
@@ -162,10 +191,6 @@ class RequestDetailsFragment : Fragment() {
 				viewModel.delete()
 				true
 			}
-			R.id.action_edit -> {
-				viewModel.editMode()
-				true
-			}
 			R.id.action_send -> {
 				viewModel.getDataToComposeEmail()
 				true
@@ -173,12 +198,9 @@ class RequestDetailsFragment : Fragment() {
 			R.id.action_save -> {
 				viewModel.save(
 					name = binding.nameEdit.text.toString(),
-					desc = binding.descEdit.text.toString()
+					desc = binding.descEdit.text.toString(),
+					filePath = imagePath
 				)
-				true
-			}
-			R.id.action_cancel -> {
-				viewModel.readOnlyMode()
 				true
 			}
 			else -> super.onOptionsItemSelected(item)

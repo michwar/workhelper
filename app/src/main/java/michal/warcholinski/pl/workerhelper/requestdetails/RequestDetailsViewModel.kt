@@ -1,7 +1,5 @@
 package michal.warcholinski.pl.workerhelper.requestdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,9 +25,6 @@ class RequestDetailsViewModel @Inject constructor(
 	private val getDataToComposeEmailUseCase: GetDataToComposeRequestEmailUseCase,
 	private val state: SavedStateHandle) : BaseViewModel() {
 
-	private val _isInEditMode = MutableLiveData(false)
-	val isInEditMode: LiveData<Boolean> = _isInEditMode
-
 	init {
 		viewModelScope.launch(Dispatchers.IO) {
 			val requestDetails =
@@ -50,16 +45,8 @@ class RequestDetailsViewModel @Inject constructor(
 		}
 	}
 
-	fun editMode() {
-		_isInEditMode.value = true
-	}
-
-	fun readOnlyMode() {
-		_isInEditMode.value = false
-	}
-
-	fun save(name: String, desc: String, filePath: String? = null) {
-		viewModelScope.launch(Dispatchers.IO) {
+	fun save(name: String, desc: String, filePath: String?) {
+		viewModelScope.launch {
 			val id = state.get<Long>("requestId").orLongMin()
 			val projectId = state.get<Long>("projectId").orLongMin()
 			editRequestUseCase.execute(id, projectId, name, desc, filePath)

@@ -16,7 +16,7 @@ import michal.warcholinski.pl.workerhelper.projectdetail.ProjectDetailsFragmentD
 /**
  * Created by Michał Warcholiński on 2021-12-21.
  */
-class RequestListAdapter : RecyclerView.Adapter<RequestListAdapter.RequestViewHolder>() {
+class RequestListAdapter(private val projectName:String) : RecyclerView.Adapter<RequestListAdapter.RequestViewHolder>() {
 
 	private val requests = arrayListOf<RequestDataModel>()
 	private val filteredRequests = arrayListOf<RequestDataModel>()
@@ -113,7 +113,8 @@ class RequestListAdapter : RecyclerView.Adapter<RequestListAdapter.RequestViewHo
 					.navigate(ProjectDetailsFragmentDirections.toRequestDetailsFragment(
 						requestId = request.id,
 						imageTransitionName = request.id.toString() + "THUMBNAIL",
-						projectId = request.projectId
+						projectId = request.projectId,
+						projectName = projectName
 					), extras)
 			}
 		}

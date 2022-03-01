@@ -1,5 +1,7 @@
 package michal.warcholinski.pl.domain.requests.domain
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -8,6 +10,8 @@ import javax.inject.Inject
 class EditRequestUseCase @Inject constructor(private val repo: RequestRepository) {
 
 	suspend fun execute(id: Long, projectId: Long, name: String, desc: String, filePath: String?) {
-		repo.saveRequest(id, projectId, name, desc, filePath)
+		withContext(Dispatchers.IO) {
+			repo.saveRequest(id, projectId, name, desc, filePath)
+		}
 	}
 }

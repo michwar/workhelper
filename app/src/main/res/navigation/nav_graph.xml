@@ -21,6 +21,12 @@
         <argument
             android:name="projectId"
             app:argType="long" />
+        <action
+            android:id="@+id/to_takePhotoFragment"
+            app:destination="@id/takePhotoFragment" />
+        <argument
+            android:name="projectName"
+            app:argType="string" />
     </fragment>
 
     <fragment
