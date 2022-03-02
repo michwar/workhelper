@@ -18,7 +18,6 @@ import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.R
 import michal.warcholinski.pl.workerhelper.databinding.FragmentAddRequestBinding
 import michal.warcholinski.pl.workerhelper.extension.gone
-import michal.warcholinski.pl.workerhelper.extension.showELog
 import michal.warcholinski.pl.workerhelper.extension.visible
 
 
@@ -32,7 +31,7 @@ class AddRequestFragment : Fragment() {
 
 	private val viewModel: AddRequestViewModel by viewModels()
 
-	private var imageUri: Uri? = null
+	private var imagePath: String? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -59,14 +58,22 @@ class AddRequestFragment : Fragment() {
 			}
 		})
 
+		viewModel.copiedFilePath.observe(viewLifecycleOwner, { copiedFilePath ->
+			if (null == copiedFilePath)
+				binding.filesButton.isEnabled = true
+			else {
+				imagePath = copiedFilePath
+				loadImagePreview()
+			}
+		})
+
 		findNavController()
 			.currentBackStackEntry
 			?.savedStateHandle
 			?.getLiveData<Uri>("file_uri")
 			?.observe(viewLifecycleOwner, { photoUri ->
-				imageUri = photoUri
+				imagePath = photoUri.path
 				loadImagePreview()
-				showELog("Received uri of a photo: $photoUri")
 			})
 
 		binding.photoButton.setOnClickListener { startCamera() }
@@ -78,30 +85,36 @@ class AddRequestFragment : Fragment() {
 
 	private fun openFileChooser() {
 		val intent = Intent(Intent.ACTION_GET_CONTENT)
-		intent.type = "*/*"
-		intent.addCategory(Intent.CATEGORY_OPENABLE)
+		intent.type = "image/*"
 
 		try {
 			startActivityForResult(
 				Intent.createChooser(intent, "Select a File to Upload"),
 				150)
 		} catch (ex: ActivityNotFoundException) {
-			// Potentially direct the user to the Market with a Dialog
 			Toast.makeText(requireContext(), "Please install a File Manager.",
 				Toast.LENGTH_SHORT).show()
 		}
 	}
 
 	private fun loadImagePreview() {
-		Glide
-			.with(this)
-			.load(imageUri)
-			.into(binding.imagePreview)
+		if (null != imagePath) {
+			binding.imagePreview.visible()
+			binding.photoButton.gone()
+			binding.filesButton.gone()
+			binding.localPhotosButton.gone()
 
-		binding.imagePreview.visible()
-		binding.photoButton.gone()
-		binding.filesButton.gone()
-		binding.localPhotosButton.gone()
+			Glide
+				.with(this)
+				.load(imagePath)
+				.into(binding.imagePreview)
+
+		} else {
+			binding.imagePreview.gone()
+			binding.photoButton.visible()
+			binding.filesButton.visible()
+			binding.localPhotosButton.visible()
+		}
 	}
 
 	private fun startCamera() {
@@ -125,9 +138,14 @@ class AddRequestFragment : Fragment() {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == 150 && resultCode == Activity.RESULT_OK) {
-			showELog("${data?.toUri(0)}")
+			binding.filesButton.isEnabled = false
+			copyFile(data?.data)
 		}
 		super.onActivityResult(requestCode, resultCode, data)
+	}
+
+	private fun copyFile(uri: Uri?) {
+		viewModel.copyFile(uri, args.projectName)
 	}
 
 	private fun addRequest() {
@@ -140,7 +158,7 @@ class AddRequestFragment : Fragment() {
 		viewModel.addRequest(
 			name = name,
 			desc = binding.descEdit.text.toString(),
-			filePath = imageUri?.path
+			filePath = imagePath
 		)
 	}
 

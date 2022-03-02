@@ -9,7 +9,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,7 +25,6 @@ import michal.warcholinski.pl.workerhelper.SendEmailDataViewState
 import michal.warcholinski.pl.workerhelper.addrequest.AddRequestFragmentDirections
 import michal.warcholinski.pl.workerhelper.databinding.FragmentRequestDetailsBinding
 import michal.warcholinski.pl.workerhelper.extension.gone
-import michal.warcholinski.pl.workerhelper.extension.showELog
 import michal.warcholinski.pl.workerhelper.extension.visible
 import java.io.File
 
@@ -72,10 +70,7 @@ class RequestDetailsFragment : Fragment() {
 					showDetails(requestDataModel)
 				}
 				BaseViewModel.ViewState.NoData -> showEmpty()
-				BaseViewModel.ViewState.Loading -> TODO()
-				is BaseViewModel.ViewState.Error -> TODO()
 				BaseViewModel.ViewState.Finish -> findNavController().popBackStack()
-				is BaseViewModel.ViewState.Info -> TODO()
 				is SendEmailDataViewState -> sendEmail(viewState.emailDataModel)
 			}
 		})
@@ -86,7 +81,7 @@ class RequestDetailsFragment : Fragment() {
 			?.getLiveData<Uri>("file_uri")
 			?.observe(viewLifecycleOwner, { photoUri ->
 				imagePath = photoUri?.path
-				showRequestImage(photoPath = photoUri?.path)
+				showRequestImage()
 			})
 
 		binding.photoButton.setOnClickListener { findNavController().navigate(RequestDetailsFragmentDirections.toTakePhotoFragment(args.projectName)) }
@@ -137,13 +132,13 @@ class RequestDetailsFragment : Fragment() {
 		binding.nameEdit.setText(requestDataModel.name)
 		binding.descEdit.setText(requestDataModel.desc)
 
-		showRequestImage(requestDataModel.photoPath)
+		showRequestImage()
 
 		binding.info.gone()
 	}
 
-	private fun showRequestImage(photoPath: String?) {
-		if (null != photoPath) {
+	private fun showRequestImage() {
+		if (null != imagePath) {
 			binding.imagePreview.visible()
 			binding.photoButton.gone()
 			binding.localPhotosButton.gone()
@@ -151,7 +146,7 @@ class RequestDetailsFragment : Fragment() {
 
 			Glide
 				.with(this)
-				.load(photoPath)
+				.load(imagePath)
 				.into(binding.imagePreview)
 		} else {
 			binding.imagePreview.gone()
@@ -174,10 +169,14 @@ class RequestDetailsFragment : Fragment() {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == 150 && resultCode == Activity.RESULT_OK) {
-			showELog("${data?.data}")
-			imagePath = data?.data?.path
+			binding.filesButton.isEnabled = false
+			copyFile(data?.data)
 		}
 		super.onActivityResult(requestCode, resultCode, data)
+	}
+
+	private fun copyFile(uri: Uri?) {
+		viewModel.copyFile(uri, args.projectName)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

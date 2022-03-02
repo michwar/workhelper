@@ -1,5 +1,6 @@
 package michal.warcholinski.pl.domain.localfiles.domain
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import michal.warcholinski.pl.domain.localfiles.model.FileDataModel
 import java.io.File
@@ -15,4 +16,6 @@ interface LocalAppFilesRepository {
 	suspend fun getLocalAppFiles(): Flow<List<FileDataModel>>
 
 	suspend fun deleteFile(path: String): Boolean
+
+	fun copyFile(uri: Uri?, projectName: String): Flow<String?>
 }

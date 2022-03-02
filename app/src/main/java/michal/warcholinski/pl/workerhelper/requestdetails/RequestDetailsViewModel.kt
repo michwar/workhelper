@@ -1,10 +1,14 @@
 package michal.warcholinski.pl.workerhelper.requestdetails
 
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import michal.warcholinski.pl.domain.localfiles.domain.CopyGalleryFileUseCase
 import michal.warcholinski.pl.domain.requests.domain.DeleteRequestUseCase
 import michal.warcholinski.pl.domain.requests.domain.EditRequestUseCase
 import michal.warcholinski.pl.domain.requests.domain.GetDataToComposeRequestEmailUseCase
@@ -23,7 +27,12 @@ class RequestDetailsViewModel @Inject constructor(
 	private val deleteRequestUseCase: DeleteRequestUseCase,
 	private val editRequestUseCase: EditRequestUseCase,
 	private val getDataToComposeEmailUseCase: GetDataToComposeRequestEmailUseCase,
+	private val copyGalleryFileUseCase: CopyGalleryFileUseCase,
 	private val state: SavedStateHandle) : BaseViewModel() {
+
+	private val _copiedFilePath = MutableLiveData<String?>()
+	val copiedFilePath: LiveData<String?>
+		get() = _copiedFilePath
 
 	init {
 		viewModelScope.launch(Dispatchers.IO) {
@@ -61,6 +70,14 @@ class RequestDetailsViewModel @Inject constructor(
 
 			val emailDataModel = getDataToComposeEmailUseCase.execute(projectId, requestId)
 			_viewState.postValue(SendEmailDataViewState(emailDataModel))
+		}
+	}
+
+	fun copyFile(uri: Uri?, projectName: String) {
+		viewModelScope.launch {
+			copyGalleryFileUseCase.invoke(uri, projectName).collect { localFilePath ->
+				_copiedFilePath.value = localFilePath
+			}
 		}
 	}
 }
