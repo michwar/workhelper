@@ -39,6 +39,9 @@
 
     <string name="no_data">No data</string>
     <string name="no_data_found_info">Could not find data. Please try again</string>
+    <string name="create_request_required_fields_info">Name can not be empty</string>
+    <string name="file_chooser_title">Select a file</string>
+    <string name="file_manager_error">Please install a File Manager</string>
 
     <string name="name">Name</string>
     <string name="request_desc">Additional description</string>

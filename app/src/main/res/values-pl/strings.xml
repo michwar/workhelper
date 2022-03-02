@@ -40,6 +40,9 @@
 
     <string name="no_data">Brak danych</string>
     <string name="no_data_found_info">Nie udało się znaleźć danych. Spróbuj ponownie.</string>
+    <string name="create_request_required_fields_info">Nazwa nie może być pusta</string>
+    <string name="file_chooser_title">Wybierz plik</string>
+    <string name="file_manager_error">Zainstaluj managera plików</string>
 
     <string name="name">Nazwa</string>
     <string name="request_desc">Dodatkowy opis</string>
@@ -60,6 +63,5 @@
     <string name="require_camera_permission_info">Aplikacja wymaga nadania prawa do aparatu w celu wykonywania zdjęć.\n
         Jeżeli nie wyrażasz na to zgody, nie będziesz miał możliwości robienia zdjęć bezpośrednio w aplikacji</string>
     <string name="grant_camera_permission">Nadaj prawa</string>
-
 
 </resources>

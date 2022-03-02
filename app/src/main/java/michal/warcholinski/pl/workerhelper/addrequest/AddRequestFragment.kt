@@ -89,10 +89,10 @@ class AddRequestFragment : Fragment() {
 
 		try {
 			startActivityForResult(
-				Intent.createChooser(intent, "Select a File to Upload"),
+				Intent.createChooser(intent, getString(R.string.file_chooser_title)),
 				150)
 		} catch (ex: ActivityNotFoundException) {
-			Toast.makeText(requireContext(), "Please install a File Manager.",
+			Toast.makeText(requireContext(), getString(R.string.file_manager_error),
 				Toast.LENGTH_SHORT).show()
 		}
 	}
@@ -151,7 +151,7 @@ class AddRequestFragment : Fragment() {
 	private fun addRequest() {
 		val name = binding.nameEdit.text.toString()
 		if (name.isEmpty()) {
-			Toast.makeText(requireContext(), "name can not be empty", Toast.LENGTH_LONG).show()
+			Toast.makeText(requireContext(), getString(R.string.create_request_required_fields_info), Toast.LENGTH_LONG).show()
 			return
 		}
 

@@ -16,6 +16,8 @@ import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.LocalAppFileDeletedViewState
 import michal.warcholinski.pl.workerhelper.R
 import michal.warcholinski.pl.workerhelper.databinding.FragmentLocalAppFilesBinding
+import michal.warcholinski.pl.workerhelper.extension.gone
+import michal.warcholinski.pl.workerhelper.extension.visible
 
 /**
  * Created by Michał Warcholiński on 2022-01-06.
@@ -61,7 +63,15 @@ class LocalAppFilesFragment : Fragment() {
 
 		viewModel.viewState.observe(viewLifecycleOwner, { viewState ->
 			when (viewState) {
-				is BaseViewModel.ViewState.Data -> loadFiles(viewState.data as List<FileDataModel>)
+				is BaseViewModel.ViewState.Data -> {
+					val files = viewState.data as List<FileDataModel>
+					if (files.isEmpty()) {
+						showEmptyViewInfo()
+					} else {
+						hideEmptyViewInfo()
+					}
+					loadFiles(files)
+				}
 				is LocalAppFileDeletedViewState -> {
 					val info = if (viewState.result) {
 						getString(R.string.delete_file_succeeded, viewState.fileName)
@@ -72,6 +82,14 @@ class LocalAppFilesFragment : Fragment() {
 				}
 			}
 		})
+	}
+
+	private fun showEmptyViewInfo() {
+		binding.emptyInfo.visible()
+	}
+
+	private fun hideEmptyViewInfo() {
+		binding.emptyInfo.gone()
 	}
 
 	private fun showInfo(message: String) {
