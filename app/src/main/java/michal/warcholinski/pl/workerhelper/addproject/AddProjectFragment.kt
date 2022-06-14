@@ -3,11 +3,11 @@ package michal.warcholinski.pl.workerhelper.addproject
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.R
 import michal.warcholinski.pl.workerhelper.databinding.FragmentAddProjectBinding
 
@@ -29,20 +29,31 @@ class AddProjectFragment : Fragment() {
 		setHasOptionsMenu(true)
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
 		_binding = FragmentAddProjectBinding.inflate(inflater, container, false)
 		return binding.root
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		viewModel.addProjectViewState.observe(viewLifecycleOwner) { viewState ->
+			binding.progressBar.isVisible = viewState.loading
+			binding.nameEdit.isEnabled = !viewState.loading
+			binding.descEdit.isEnabled = !viewState.loading
+			binding.mailEdit.isEnabled = !viewState.loading
+			binding.phoneEdit.isEnabled = !viewState.loading
 
-		viewModel.viewState.observe(viewLifecycleOwner, { viewState ->
-			when (viewState) {
-				BaseViewModel.ViewState.Finish -> findNavController().popBackStack()
-				is BaseViewModel.ViewState.Info -> showInfo(viewState.message)
+			if (null != viewState.info) {
+				showInfo(viewState.info)
+				viewModel.infoShown()
 			}
-		})
+			if (viewState.finish)
+				findNavController().popBackStack()
+		}
 	}
 
 	private fun showInfo(message: String) {
