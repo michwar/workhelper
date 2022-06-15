@@ -2,6 +2,7 @@ package michal.warcholinski.pl.workerhelper.addrequest.localappfiles
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -9,7 +10,6 @@ import kotlinx.coroutines.launch
 import michal.warcholinski.pl.domain.localfiles.domain.DeleteLocalAppFileUseCase
 import michal.warcholinski.pl.domain.localfiles.domain.GetUnusedLocalAppFilesUseCase
 import michal.warcholinski.pl.domain.localfiles.model.FileDataModel
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class LocalAppFilesViewModel @Inject constructor(
 		private val getLocalAppFilesUseCase: GetUnusedLocalAppFilesUseCase,
 		private val deleteLocalAppFileUseCase: DeleteLocalAppFileUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 	
 	data class LocalAppFilesViewState(
 			val localFiles: List<FileDataModel> = emptyList(),

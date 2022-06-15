@@ -2,6 +2,7 @@ package michal.warcholinski.pl.workerhelper.requestlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import michal.warcholinski.pl.domain.requests.domain.DeleteRequestUseCase
 import michal.warcholinski.pl.domain.requests.domain.GetAllProjectRequestsUseCase
 import michal.warcholinski.pl.domain.requests.model.RequestDataModel
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class RequestListViewModel @Inject constructor(
 		private val getAllRequestsCase: GetAllProjectRequestsUseCase,
 		private val deleteRequestUseCase: DeleteRequestUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 	
 	data class RequestListViewState(
 			val requests: List<RequestDataModel> = emptyList(),

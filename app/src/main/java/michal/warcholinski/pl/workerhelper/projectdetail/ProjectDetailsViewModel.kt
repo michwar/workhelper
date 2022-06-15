@@ -2,6 +2,7 @@ package michal.warcholinski.pl.workerhelper.projectdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +12,6 @@ import michal.warcholinski.pl.domain.project.domain.GetProjectDetailsUseCase
 import michal.warcholinski.pl.domain.project.domain.PrepareAndGetDataToComposeProjectZipEmailUseCase
 import michal.warcholinski.pl.domain.project.model.ProjectDataModel
 import michal.warcholinski.pl.domain.requests.model.EmailDataModel
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -23,7 +23,7 @@ class ProjectDetailsViewModel @Inject constructor(
 		private val deleteProjectUseCase: DeleteProjectUseCase,
 		private val archiveProjectUseCase: ArchiveProjectUseCase,
 		private val getZipProjectDataToComposeEmailUseCase: PrepareAndGetDataToComposeProjectZipEmailUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 	
 	data class ProjectDetailsViewState(
 			val project: ProjectDataModel? = null,

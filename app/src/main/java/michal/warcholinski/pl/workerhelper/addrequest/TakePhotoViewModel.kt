@@ -1,8 +1,8 @@
 package michal.warcholinski.pl.workerhelper.addrequest
 
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import michal.warcholinski.pl.domain.localfiles.domain.GetLocalAppFilesDirUseCase
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import java.io.File
 import javax.inject.Inject
 
@@ -11,9 +11,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class TakePhotoViewModel @Inject constructor(
-	private val getLocalAppFilesDirUseCase: GetLocalAppFilesDirUseCase
-) : BaseViewModel() {
-
+		private val getLocalAppFilesDirUseCase: GetLocalAppFilesDirUseCase
+) : ViewModel() {
+	
 	val getLocalAppFilesDir: File
 		get() = getLocalAppFilesDirUseCase.execute()
 }

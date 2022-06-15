@@ -1,15 +1,11 @@
 package michal.warcholinski.pl.workerhelper.addrequest
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import michal.warcholinski.pl.domain.localfiles.domain.CopyGalleryFileUseCase
 import michal.warcholinski.pl.domain.requests.domain.AddRequestCase
-import michal.warcholinski.pl.workerhelper.BaseViewModel
 import michal.warcholinski.pl.workerhelper.extension.orLongMin
 import javax.inject.Inject
 
@@ -21,7 +17,7 @@ class AddRequestViewModel @Inject constructor(
 		private val addRequestCase: AddRequestCase,
 		private val copyGalleryFileUseCase: CopyGalleryFileUseCase,
 		private val state: SavedStateHandle
-) : BaseViewModel() {
+) : ViewModel() {
 	
 	data class AddRequestViewState(
 			val filePath: String? = null,
