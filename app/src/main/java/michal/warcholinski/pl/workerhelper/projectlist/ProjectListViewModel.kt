@@ -1,10 +1,13 @@
 package michal.warcholinski.pl.workerhelper.projectlist
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import michal.warcholinski.pl.domain.project.domain.GetAllProjectsUseCase
-import michal.warcholinski.pl.workerhelper.BaseViewModel
+import michal.warcholinski.pl.domain.project.model.ProjectDataModel
 import javax.inject.Inject
 
 /**
@@ -12,13 +15,19 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ProjectListViewModel @Inject constructor(
-	private val getAllProjectsUseCase: GetAllProjectsUseCase
-) : BaseViewModel() {
-
+		private val getAllProjectsUseCase: GetAllProjectsUseCase
+) : ViewModel() {
+	
+	data class ProjectListViewState(val projects: List<ProjectDataModel> = emptyList())
+	
+	private val _projectListViewState = MutableLiveData(ProjectListViewState())
+	val projectListViewState: LiveData<ProjectListViewState>
+		get() = _projectListViewState
+	
 	fun getAllProjects(realized: Boolean) {
 		viewModelScope.launch {
 			getAllProjectsUseCase.execute(realized).collect {
-				_viewState.postValue(ViewState.Data(it))
+				_projectListViewState.value = _projectListViewState.value?.copy(projects = it)
 			}
 		}
 	}
