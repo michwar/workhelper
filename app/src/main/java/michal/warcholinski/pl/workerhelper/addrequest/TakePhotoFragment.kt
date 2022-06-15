@@ -33,18 +33,18 @@ import java.util.concurrent.Executors
  */
 @AndroidEntryPoint
 class TakePhotoFragment : Fragment() {
-
+	
 	private var imageCapture: ImageCapture? = null
 	private lateinit var outputDirectory: File
 	private lateinit var cameraExecutor: ExecutorService
-
+	
 	private val args: TakePhotoFragmentArgs by navArgs()
-
+	
 	private var _binding: FragmentTakePictureBinding? = null
 	private val binding get() = _binding!!
-
+	
 	private val viewModel: TakePhotoViewModel by viewModels()
-
+	
 	private val requestPermissionLauncher =
 		registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
 			if (isGranted) {
@@ -54,32 +54,34 @@ class TakePhotoFragment : Fragment() {
 				showAdditionalCameraPermissionInfoView()
 			}
 		}
-
+	
 	private fun hideAdditionalCameraPermissionInfoView() {
 		binding.permissionExtraInfo.gone()
 		binding.grantCameraPermissionButton.gone()
 		binding.cameraPreview.visible()
 		binding.takePhoto.isEnabled = true
 	}
-
+	
 	private fun showAdditionalCameraPermissionInfoView() {
 		binding.permissionExtraInfo.visible()
 		binding.grantCameraPermissionButton.visible()
 		binding.cameraPreview.gone()
 		binding.takePhoto.isEnabled = false
 	}
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	
+	override fun onCreateView(
+			inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+	): View? {
 		_binding = FragmentTakePictureBinding.inflate(inflater, container, false)
 		return binding.root
 	}
-
+	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		
 		outputDirectory = getOutputDirectory()
 		cameraExecutor = Executors.newSingleThreadExecutor()
-
+		
 		when (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)) {
 			PackageManager.PERMISSION_GRANTED -> {
 				startCameraPreview()
@@ -88,32 +90,32 @@ class TakePhotoFragment : Fragment() {
 				requestCameraPermission()
 			}
 		}
-
+		
 		binding.takePhoto.setOnClickListener { takePhoto() }
 		binding.grantCameraPermissionButton.setOnClickListener { requestCameraPermission() }
 	}
-
+	
 	private fun requestCameraPermission() {
 		requestPermissionLauncher.launch(Manifest.permission.CAMERA)
 	}
-
+	
 	private fun getOutputDirectory(): File {
 		return viewModel.getLocalAppFilesDir
 	}
-
+	
 	private fun startCameraPreview() {
 		binding.takePhoto.isEnabled = true
 		val cameraPreviewFuture = ProcessCameraProvider.getInstance(requireContext())
-
+		
 		cameraPreviewFuture.addListener({
 			val cameraProvider = cameraPreviewFuture.get()
-
+			
 			val preview = Preview.Builder()
-				.build()
-				.also { preview -> preview.setSurfaceProvider(binding.cameraPreview.surfaceProvider) }
-
+					.build()
+					.also { preview -> preview.setSurfaceProvider(binding.cameraPreview.surfaceProvider) }
+			
 			val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
+			
 			try {
 				imageCapture = ImageCapture.Builder().build()
 				cameraProvider.unbindAll()
@@ -121,25 +123,25 @@ class TakePhotoFragment : Fragment() {
 			} catch (e: Exception) {
 				e.printStackTrace()
 			}
-
+			
 		}, ContextCompat.getMainExecutor(requireContext()))
 	}
-
+	
 	private fun takePhoto() {
 		val imageCapture = imageCapture ?: return
 		val currentDate =
 			SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
 		val photoFile = File(outputDirectory, "${args.projectName}_${currentDate}.jpg")
 		val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
+		
 		imageCapture.takePicture(
 			outputOptions,
 			ContextCompat.getMainExecutor(requireContext()),
 			object : ImageCapture.OnImageSavedCallback {
 				override fun onError(exc: ImageCaptureException) {
-
+				
 				}
-
+				
 				override fun onImageSaved(output: ImageCapture.OutputFileResults) {
 					val savedUri = Uri.fromFile(photoFile)
 					findNavController().previousBackStackEntry?.savedStateHandle?.set("file_uri", savedUri)
@@ -148,7 +150,7 @@ class TakePhotoFragment : Fragment() {
 			}
 		)
 	}
-
+	
 	override fun onDestroyView() {
 		super.onDestroyView()
 		cameraExecutor.shutdown()
